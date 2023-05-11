@@ -1,0 +1,98 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+Data collection and processing
+
+#loading csv data to panda data frame
+heart_data = pd.read_csv('/content/heart_disease_data.csv')
+
+#print first 5 rows of dataset
+heart_data.head()
+
+heart_data.tail()
+
+#no of rows and col in data set
+heart_data.shape
+
+#getting some more info from data set
+heart_data.info()
+
+
+#CHecking for missing values
+heart_data.isnull().sum()
+
+#get statstical measures about data
+heart_data.describe()
+
+#Checking the distribution of target variable
+heart_data['target'].value_counts()
+
+1 == heart disease
+
+0 == No heart disease
+
+splitting features and target columns
+
+# X = features Y = target
+x = heart_data.drop(columns='target' , axis =1)
+
+y = heart_data['target']
+
+print(x)
+
+print(y)
+
+Splitting data into training & test data
+
+x_train , x_test , y_train , y_test = train_test_split(x , y , test_size= 0.2 , stratify = y ,random_state=2 )
+
+print(x.shape , x_train.shape , x_test.shape)
+
+TRAINING OUR MODEL
+
+#using logistic regression model
+
+
+model = LogisticRegression()
+
+#USING TRAING DATA
+
+model.fit(x_train , y_train)
+
+MODEL EVALUATION
+
+Accuracy score is used
+
+#Accuracy on training data
+x_train_prediction = model.predict(x_train)
+training_data_acc= accuracy_score(x_train_prediction , y_train)
+
+print('Accuracy of training data : ' , training_data_acc)
+
+#test data accuracy
+x_test_prediction = model.predict(x_test)
+test_data_acc= accuracy_score(x_test_prediction , y_test)
+
+print('Accuracy of test data : ' , test_data_acc)
+
+#BUILDING THE PREDICTOR SYSTEM
+
+input_data = (64,0,0,144,268,0,0,160,0,3.6,0,2,2)
+
+# change the input data to a numpy array
+input_data_as_numpy_array= np.asarray(input_data)
+
+# reshape the numpy array as we are predicting for only on instance
+input_data_reshaped = input_data_as_numpy_array.reshape(1,-1)
+
+prediction = model.predict(input_data_reshaped)
+print(prediction)
+
+if (prediction[0]== 0):
+  print('The Person does not have a Heart Disease')
+else:
+  print('The Person has Heart Disease')
+
